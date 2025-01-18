@@ -1,0 +1,18 @@
+:root {
+    --color-100: #BDFFFF;
+    --color-200: #8BF2F2;
+    --color-300: #1F7D97;
+    --color-400: #104D6B;
+    --color-500: #153042;
+    --color-600: #142839;
+    --color-700: #0E1E2B;
+    --color-750: #0B1823;
+    --color-800: #09141D;
+    --color-850: #071118;
+    --color-900: #050B10;
+
+    --ground: var(--color-800);
+    --soild: var(--color-750);
+    --shadow: var(--color-850);
+  }
+
