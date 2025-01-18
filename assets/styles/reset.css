@@ -1,0 +1,95 @@
+/* Reset CSS */
+
+/* 1. Resetting box-sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 2. Body reset */
+body {
+  font-family: sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  background-color: #fff;
+  color: #000;
+}
+
+/* 3. Reset anchor tag styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 4. Reset list styles */
+ul,
+ol {
+  list-style: none;
+}
+
+/* 5. Reset table styles */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+/* 6. Form elements reset */
+input,
+textarea,
+button {
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+input[type="submit"],
+button {
+  cursor: pointer;
+}
+
+button:focus,
+input:focus {
+  outline: none;
+}
+
+/* 7. Remove default styling for images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 8. Reset default paragraph margins */
+p {
+  margin-bottom: 1em;
+}
+
+/* 9. Reset default heading margins */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+/* 10. Remove default styles for blockquote */
+blockquote {
+  margin: 0;
+  padding: 0;
+}

@@ -1,12 +1,18 @@
 <template>
   <div :class="$style.playerTile">
+    <audio
+      ref="playerAudioElement"
+      src="/sounds/walking-sound.mp3"
+      preload="auto"
+      loop
+      volume="0.1"
+    />
     <div
       :class="[
         $style.player,
         $style[`player--${direction}`],
         {
           [$style['player--moving']]: isMoving,
-          [$style['player--stopped']]: !isMoving,
         },
       ]"
     ></div>
@@ -19,94 +25,196 @@ interface Props {
   isMoving: boolean
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+const playerAudioElement = ref<HTMLAudioElement | null>(null)
+const playAudio = () => {
+  if (playerAudioElement.value) {
+    playerAudioElement.value.volume = 0.1
+    playerAudioElement.value.play()
+  }
+}
+const pauseAudio = () => {
+  playerAudioElement.value?.pause()
+}
+
+watchEffect(() => {
+  if (props.isMoving) {
+    playAudio()
+  } else {
+    pauseAudio()
+  }
+})
 </script>
 
 <style module lang="postcss">
 .playerTile {
-  width: 130px;
-  height: 130px;
-  position: relative;
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .player {
   width: 100%;
   height: 100%;
-  background-image: url('/public/player-sprite.svg');
+  background-image: url('/player-sprite.svg');
   background-repeat: no-repeat;
 }
 
-.player--moving {
-  animation: bounce 0.3s ease-in-out infinite;
-}
-
 .player--down {
-  animation: down 0.5s steps(1) infinite;
+  background-position: 0px 0px;
 
   &.player--moving {
-    animation:
-      down 0.5s steps(1) infinite,
-      bounce 0.3s ease-in-out infinite;
+    animation: down 0.9s steps(1) infinite;
   }
 }
 
 .player--up {
-  animation: down 0.5s steps(1) infinite;
+  background-position: 0px -150px;
+  /* animation: down 0.5s steps(1) infinite; */
 
   &.player--moving {
-    animation:
-      down 0.5s steps(1) infinite,
-      bounce 0.3s ease-in-out infinite;
+    animation: up 0.9s steps(1) infinite;
   }
 }
 
 .player--right {
-  animation: down 0.5s steps(1) infinite;
+  background-position: 0px -300px;
+  /* animation: down 0.5s steps(1) infinite; */
 
   &.player--moving {
-    animation:
-      down 0.5s steps(1) infinite,
-      bounce 0.3s ease-in-out infinite;
+    animation: right 0.9s steps(1) infinite;
   }
 }
 
 .player--left {
-  animation: down 0.5s steps(1) infinite;
+  background-position: 0px -450px;
+  /* animation: down 0.5s steps(1) infinite; */
 
   &.player--moving {
-    animation:
-      down 0.5s steps(1) infinite,
-      bounce 0.3s ease-in-out infinite;
+    animation: left 0.9s steps(1) infinite;
   }
 }
-
-@keyframes bounce {
-  0% {
-    transform: translateY(0);
-  }
-  80% {
-    transform: translateY(-3px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
 @keyframes down {
   0% {
     background-position: 0px 0px;
   }
+  12.5% {
+    background-position: -300px 0px;
+  }
   25% {
-    background-position: 0px -130px;
+    background-position: -150px 0px;
+  }
+  37.5% {
+    background-position: -300px 0px;
   }
   50% {
-    background-position: 0px -260px;
+    background-position: 0px 0px;
+  }
+  62.5% {
+    background-position: -450px 0px;
   }
   75% {
-    background-position: 0px -390px;
+    background-position: -600px 0px;
+  }
+  87.5% {
+    background-position: -450px 0px;
   }
   100% {
     background-position: 0px 0px;
+  }
+}
+
+@keyframes up {
+  0% {
+    background-position: 0px -150px;
+  }
+  12.5% {
+    background-position: -300px -150px;
+  }
+  25% {
+    background-position: -150px -150px;
+  }
+  37.5% {
+    background-position: -300px -150px;
+  }
+  50% {
+    background-position: 0px -150px;
+  }
+  62.5% {
+    background-position: -600px -150px;
+  }
+  75% {
+    background-position: -450px -150px;
+  }
+  87.5% {
+    background-position: -600px -150px;
+  }
+  100% {
+    background-position: 0px -150px;
+  }
+}
+
+@keyframes right {
+  0% {
+    background-position: 0px -300px;
+  }
+  12.5% {
+    background-position: -300px -300px;
+  }
+  25% {
+    background-position: -150px -300px;
+  }
+  37.5% {
+    background-position: -300px -300px;
+  }
+  50% {
+    background-position: 0px -300px;
+  }
+  62.5% {
+    background-position: -450px -300px;
+  }
+  75% {
+    background-position: -600px -300px;
+  }
+  87.5% {
+    background-position: -450px -300px;
+  }
+  100% {
+    background-position: 0px -300px;
+  }
+}
+
+@keyframes left {
+  0% {
+    background-position: 0px -450px;
+  }
+  12.5% {
+    background-position: -300px -450px;
+  }
+  25% {
+    background-position: -150px -450px;
+  }
+  37.5% {
+    background-position: -300px -450px;
+  }
+  50% {
+    background-position: 0px -450px;
+  }
+  62.5% {
+    background-position: -450px -450px;
+  }
+  75% {
+    background-position: -600px -450px;
+  }
+  87.5% {
+    background-position: -450px -450px;
+  }
+  100% {
+    background-position: 0px -450px;
   }
 }
 </style>
