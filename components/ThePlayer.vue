@@ -5,7 +5,7 @@
       src="/sounds/walking-sound.mp3"
       preload="auto"
       loop
-      volume="0.1"
+      :muted="isSoundMuted"
     />
     <div
       :class="[
@@ -23,6 +23,7 @@
 interface Props {
   direction: 'up' | 'down' | 'left' | 'right'
   isMoving: boolean
+  isSoundMuted: boolean
 }
 
 const props = defineProps<Props>()

@@ -1,6 +1,4 @@
-import { reactive, onMounted, onUnmounted } from 'vue'
-
-interface PlayerComposable {
+interface PlayerData {
   direction: 'up' | 'down' | 'left' | 'right'
   isMoving: boolean
   position: {
@@ -15,16 +13,34 @@ export function useMap(grid: string[]) {
     height: 4000,
   })
 
-  const player = reactive<PlayerComposable>({
+  const player = reactive<PlayerData>({
     direction: 'down',
     isMoving: false,
-    position: {
-      x: 1875,
-      y: 3650,
-    },
+    position: initPlayerPosition(),
   })
 
   const keysPressed = new Set<string>()
+
+  function initPlayerPosition() {
+    const position = localStorage.getItem('playerPosition')
+
+    if (position) {
+      const parsed = JSON.parse(position)
+      return {
+        x: Number(parsed.x),
+        y: Number(parsed.y),
+      }
+    }
+
+    return {
+      x: 1875,
+      y: 3650,
+    }
+  }
+
+  const savePlayerPosition = () => {
+    localStorage.setItem('playerPosition', JSON.stringify(player.position))
+  }
 
   const getTileId = (x: number, y: number) => {
     const mapWidthInTiles = 40
@@ -43,10 +59,17 @@ export function useMap(grid: string[]) {
     const newY = player.position.y + dy
     const tileId = getTileId(newX, newY)
 
-    if (!tileId.includes('W') && tileId !== 'D0') {
+    if (tileId === EXIT_PORTAL) {
+      // TODO switch level management
+      player.isMoving = false
+      keysPressed.clear()
+      window.removeEventListener('keydown', keydownHandler)
+    } else if (!BLOCKED_TILE_IDS.includes(tileId)) {
       player.position.x = newX
       player.position.y = newY
     }
+
+    savePlayerPosition()
   }
 
   const updateMovement = () => {

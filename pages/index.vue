@@ -34,6 +34,7 @@
       :class="$style.player"
       :direction="player.direction"
       :is-moving="player.isMoving"
+      :is-sound-muted="false"
     />
   </div>
 </template>
