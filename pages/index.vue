@@ -95,14 +95,14 @@ const onBackHome = (): void => {
 .levelTag {
 	position: fixed;
 	top: 20px;
-	right: 20px;
+	left: 20px;
 	opacity: 0;
 	transition: opacity 0.7s;
 }
 
 .timerTag {
 	position: fixed;
-	bottom: 20px;
+	top: 20px;
 	right: 20px;
 }
 
