@@ -2,7 +2,8 @@
   <div :class="[$style.wrapper, {[$style.inGame] : view === 'game'}]">
 		<div :class="$style.views">
 			<ViewGame v-if="view === 'game'" :level @end="onEndGame()" />
-			<ViewEnd v-else-if="view === 'end'" :level :timer @next-level="onNextLevel()" />
+			<ViewNext v-else-if="view === 'next'" :level :timesHistory @next-level="onNextLevel()" />
+			<ViewEnd v-else-if="view === 'end'" :level :timer @back-home="onBackHome()" />
 			<ViewStart v-else @start-game="onStartGame()" />
 		</div>
 		<div :class="$style.ui">
@@ -14,15 +15,21 @@
 
 <script setup lang="ts">
 
-const view = ref<'start' | 'game' | 'end'>('start');
+const view = ref<'start' | 'game' | 'next' | 'end'>('start');
 const level = ref<number>(1);
 const timer = ref<number>(0);
+const maxLevel = 3;
 let timerInterval = null as any;
+const timesHistory = ref<number[]>([]);
 
 const startTimer = (): void => {
   timerInterval = setInterval(() => {
     timer.value += 1;
   }, 1000);
+}
+
+const saveTime = (): void => {
+	timesHistory.value.push(timer.value);
 }
 
 const endTimer = (): void => {
@@ -31,6 +38,10 @@ const endTimer = (): void => {
 
 const resetTimer = (): void => {
   timer.value = 0;
+}
+
+const resetHistory = (): void => {
+	timesHistory.value = [];
 }
 
 const onStartGame = (): void => {
@@ -46,8 +57,21 @@ const onNextLevel = (): void => {
 }
 
 const onEndGame = (): void => {
-  view.value = 'end';
+	saveTime();
 	endTimer();
+
+	if(level.value === maxLevel) {
+		view.value = 'end';
+	} else {
+		view.value = 'next';
+	}
+}
+
+const onBackHome = (): void => {
+	view.value = 'start';
+	level.value = 1;
+	resetTimer();
+	resetHistory();
 }
 
 </script>
