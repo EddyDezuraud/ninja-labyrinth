@@ -35,8 +35,25 @@ const movingDirection = ref<'up' | 'down' | 'left' | 'right'>('down')
 const isLeaving = ref(false)
 let timer = null
 const isInitialized = ref(false)
+const highestScore = ref<number>(0)
+
+const getHighestScore = (): void => {
+	const storedScore = localStorage.getItem('highestScore')
+	if (storedScore) {
+		highestScore.value = parseInt(storedScore, 10)
+	}
+}
+
+const readableTimer = computed<string>(() => {
+	// return xx minutes xx seconds of all completed levels
+	const minutes = Math.floor(highestScore.value / 60);
+	const seconds = highestScore.value % 60;
+	return `${minutes}m ${seconds}s`;
+})
 
 onMounted(() => {
+	getHighestScore();
+
   timer = setTimeout(() => {
     isMoving.value = false
   }, 11500) // 10 secondes
@@ -149,5 +166,21 @@ const onClickButton = () => {
     opacity: 0;
     transition: opacity 0.5s;
   }
+}
+
+.highestScore {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}
+
+@media (max-height: 550px) {
+	.title {
+		font-size: 48px;
+	}
+
+	.inner {
+		gap: 20px;
+	}
 }
 </style>

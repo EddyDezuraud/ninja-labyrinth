@@ -21,25 +21,41 @@
 
 <script setup lang="ts">
 interface Props {
-	level: number;
-	timer: number;
+	timesHistory: number[];
 }
 
-const { timer } = defineProps<Props>();
+const { timesHistory } = defineProps<Props>();
 
 const emits = defineEmits<{
-	(e: 'back-home'): void
+	(e: 'next-level'): void
 }>()
 
+const setHighestScore = () => {
+	const storedScore = localStorage.getItem('highestScore');
+	const score = timesHistory.reduce((acc, time) => acc + time, 0);
+	if (storedScore) {
+		// additionner l'ensemble des temps
+		if (score > parseInt(storedScore, 10)) {
+			localStorage.setItem('highestScore', score.toString());
+		}
+	} else {
+		localStorage.setItem('highestScore', score.toString());
+	}
+}
+
 const readableTimer = computed<number>(() => {
-	// return xx minutes and xx seconds
-	return timer + ' seconds';
+	// return xx minutes xx seconds of all completed levels
+	const totalSeconds = timesHistory.reduce((acc, time) => acc + time, 0);
+	const minutes = Math.floor(totalSeconds / 60);
+	const seconds = totalSeconds % 60;
+	return `${minutes} minutes and ${seconds} seconds`;
 })
 
 const onClickButton = () => {
 	emits('back-home');
 }
 
+onMounted(() => setHighestScore())
 </script>
 
 
