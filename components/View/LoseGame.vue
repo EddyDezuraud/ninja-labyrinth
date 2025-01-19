@@ -1,19 +1,15 @@
 <template>
-  <div
-    :class="[
-      $style.wrapper,
-      { [$style.leaving]: isLeaving },
-      { [$style.initialized]: isInitialized },
-    ]"
-  >
+  <div :class="$style.wrapper">
     <div :class="$style.inner">
       <div :class="$style.content">
-        <h1 :class="$style.title">Victory Achieved!</h1>
+        <h1 :class="$style.title">Game Over!</h1>
         <p :class="$style.p">
-          You’ve conquered the game in <strong>{{ readableTimer }}! </strong
-          ><br />
-          Thanks for playing and see you on your next adventure!
+          You’ve completed level
+          <strong>{{ level === 1 ? level : level - 1 }}</strong
+          >, but didn't make it past this one.<br />
+          Better luck next time!
         </p>
+        <div :class="$style.deadPlayer"></div>
       </div>
       <UiButton :class="$style.button" @click="onClickButton">Go Home</UiButton>
     </div>
@@ -26,41 +22,18 @@
 
 <script setup lang="ts">
 interface Props {
-  timesHistory: number[]
+  level: number
 }
 
-const { timesHistory } = defineProps<Props>()
+defineProps<Props>()
 
 const emits = defineEmits<{
   (e: 'back-home'): void
 }>()
 
-const setHighestScore = () => {
-  const storedScore = localStorage.getItem('highestScore')
-  const score = timesHistory.reduce((acc, time) => acc + time, 0)
-  if (storedScore) {
-    // additionner l'ensemble des temps
-    if (score < parseInt(storedScore, 10)) {
-      localStorage.setItem('highestScore', score.toString())
-    }
-  } else {
-    localStorage.setItem('highestScore', score.toString())
-  }
-}
-
-const readableTimer = computed<number>(() => {
-  // return xx minutes xx seconds of all completed levels
-  const totalSeconds = timesHistory.reduce((acc, time) => acc + time, 0)
-  const minutes = Math.floor(totalSeconds / 60)
-  const seconds = totalSeconds % 60
-  return `${minutes} minutes and ${seconds} seconds`
-})
-
 const onClickButton = () => {
   emits('back-home')
 }
-
-onMounted(() => setHighestScore())
 </script>
 
 <style module lang="postcss">
@@ -123,5 +96,11 @@ onMounted(() => setHighestScore())
   align-items: center;
   text-align: center;
   gap: 20px;
+}
+
+.deadPlayer {
+  width: 300px;
+  height: 300px;
+  background-image: url('/player-rip.svg');
 }
 </style>

@@ -1,7 +1,12 @@
 <template>
   <div :class="[$style.wrapper, { [$style.inGame]: view === 'game' }]">
     <div :class="$style.views">
-      <ViewGame v-if="view === 'game'" :level @end="onEndGame()" />
+      <ViewGame
+        v-if="view === 'game'"
+        :level
+        @lose="onLoseGame()"
+        @end="onEndGame()"
+      />
       <ViewNextLevel
         v-else-if="view === 'next'"
         :level
@@ -10,8 +15,12 @@
       />
       <ViewEndGame
         v-else-if="view === 'end'"
-        :level
         :timesHistory
+        @back-home="onBackHome()"
+      />
+      <ViewLoseGame
+        v-else-if="view === 'lose'"
+        :level
         @back-home="onBackHome()"
       />
       <ViewStart v-else @start-game="onStartGame()" />
@@ -32,10 +41,9 @@
 <script setup lang="ts">
 const { getPlayerLevel, savePlayerLevel, resetGameSave } = useGameSave()
 
-const view = ref<'start' | 'game' | 'next' | 'end'>('start')
+const view = ref<'start' | 'game' | 'lose' | 'next' | 'end'>('start')
 const level = ref(1)
 const timer = ref(0)
-const maxLevel = 2
 let timerInterval = null as any
 const timesHistory = ref<number[]>([])
 const audioElement = ref<HTMLAudioElement | null>(null)
@@ -69,7 +77,7 @@ const resetHistory = (): void => {
 }
 
 const onStartGame = (): void => {
-  level.value = getPlayerLevel() ?? 1
+  level.value = getPlayerLevel() ?? 3
   startAudio()
   view.value = 'game'
   startTimer()
@@ -86,14 +94,22 @@ const onNextLevel = (): void => {
 const onEndGame = (): void => {
   saveTime()
   endTimer()
+  resetGameSave()
 
-  if (level.value === maxLevel) {
+  if (level.value === MAX_LEVEL) {
     view.value = 'end'
   } else {
     view.value = 'next'
   }
+}
 
+const onLoseGame = (): void => {
+  endTimer()
   resetGameSave()
+
+  if (level.value === MAX_LEVEL) {
+    view.value = 'lose'
+  }
 }
 
 const onBackHome = (): void => {

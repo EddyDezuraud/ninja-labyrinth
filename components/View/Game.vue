@@ -5,13 +5,6 @@
       src="/sounds/exit-opened.mp3"
       preload="auto"
     />
-
-    <!-- <div style="position: absolute; top: 0px; z-index: 100; background: white">
-      playerPosition: {{ player.position }} playerDirection:
-      {{ player.direction }} isMoving: {{ player.isMoving }} TileId:
-      {{ tileId }} isExitOpen:
-      {{ map.isExitOpen }}
-    </div> -->
     <TheTorchAura />
     <TheMap
       :grid="map.grid"
@@ -37,26 +30,27 @@
 
 <script setup lang="ts">
 interface Props {
-	level: number
+  level: number
 }
 
 const { level } = defineProps<Props>()
 
 const emits = defineEmits<{
   (e: 'end'): void
+  (e: 'lose'): void
 }>()
 
 const exitAudioElement = ref<HTMLAudioElement | null>(null)
 
-const levelFiles = [
-	LEVEL_1,
-	LEVEL_2
-]
+const levelFiles = [LEVEL_1, LEVEL_2, LEVEL_3]
 
-const { map, player, getTileId } = useGameEngine(levelFiles[level - 1])
-// const tileId = computed(() => getTileId(player.position.x, player.position.y))
+const { map, player } = useGameEngine(levelFiles[level - 1])
 
 watchEffect(() => {
+  if (player.isDead) {
+    emits('lose')
+  }
+
   if (map.isEnd) {
     emits('end')
   }

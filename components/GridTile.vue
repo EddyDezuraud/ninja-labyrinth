@@ -141,6 +141,14 @@ defineProps<Props>()
   }
 }
 
+.tile--S10 {
+  background-position: -1000px -400px;
+}
+
+.tile--S11 {
+  background-position: -1100px -400px;
+}
+
 .tile--I0 {
   background-position: 0px -500px;
 }

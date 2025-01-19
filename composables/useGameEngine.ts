@@ -10,6 +10,7 @@ export interface Level {
 
 export interface PlayerData {
   direction: 'up' | 'down' | 'left' | 'right'
+  isDead: boolean
   isMoving: boolean
   keysPressed: Set<string>
   position: {
@@ -45,6 +46,7 @@ export function useGameEngine(level: Level) {
       y: level.playerStartAt.y,
     },
     showInteractButton: false,
+    isDead: false,
   })
 
   const getTileId = (x: number, y: number) => {
@@ -71,16 +73,21 @@ export function useGameEngine(level: Level) {
       player.showInteractButton = false
     }
 
+    checkTrap(targetTileId)
+
     if (targetTileId === EXIT_PORTAL && map.isExitOpen) {
-      // TODO switch level management
-      player.isMoving = false
+      stopMovement()
       map.isEnd = true
-      player.keysPressed.clear()
-      window.removeEventListener('keydown', keydownHandler)
     } else if (!BLOCKED_TILE_IDS.includes(targetTileId)) {
       player.position.x = newX
       player.position.y = newY
     }
+  }
+
+  const stopMovement = () => {
+    player.isMoving = false
+    player.keysPressed.clear()
+    window.removeEventListener('keydown', keydownHandler)
   }
 
   let elapsedTime = 0
@@ -111,6 +118,16 @@ export function useGameEngine(level: Level) {
     if (!map.isEnd && level.hasTraps && elapsedTime >= level.trapToggleDelay) {
       map.isTrapActive = !map.isTrapActive
       elapsedTime = 0
+
+      const currentTileId = getTileId(player.position.x, player.position.y)
+      checkTrap(currentTileId)
+    }
+  }
+
+  const checkTrap = (tileId: string) => {
+    if (TRAP_TILES.includes(tileId) && map.isTrapActive) {
+      stopMovement()
+      player.isDead = true
     }
   }
 
