@@ -2,20 +2,12 @@
   <div :class="$style.wrapper">
     <div :class="$style['move-btn']">
       <div>
-        <UiKeyboardKey :is-active="activeButtons?.includes('z')">
-          Z
-        </UiKeyboardKey>
+        <UiKeyboardKey :is-active="activeButtons?.has('z')"> Z </UiKeyboardKey>
       </div>
       <div :class="$style['bottom-row-btn']">
-        <UiKeyboardKey :is-active="activeButtons?.includes('q')">
-          Q
-        </UiKeyboardKey>
-        <UiKeyboardKey :is-active="activeButtons?.includes('s')">
-          S
-        </UiKeyboardKey>
-        <UiKeyboardKey :is-active="activeButtons?.includes('d')">
-          D
-        </UiKeyboardKey>
+        <UiKeyboardKey :is-active="activeButtons?.has('q')"> Q </UiKeyboardKey>
+        <UiKeyboardKey :is-active="activeButtons?.has('s')"> S </UiKeyboardKey>
+        <UiKeyboardKey :is-active="activeButtons?.has('d')"> D </UiKeyboardKey>
       </div>
     </div>
     <div
@@ -30,7 +22,7 @@
 
 <script setup lang="ts">
 interface Props {
-  activeButtons: string[]
+  activeButtons: ReadonlySet<string>
   showInteractButton: boolean
 }
 
@@ -39,10 +31,12 @@ defineProps<Props>()
 
 <style module lang="postcss">
 .wrapper {
+  width: 100%;
   align-items: center;
   display: flex;
   justify-content: space-between;
   color: white;
+  padding: 50px 75px;
 }
 
 .move-btn {

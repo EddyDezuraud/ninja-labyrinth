@@ -27,6 +27,11 @@
       :is-moving="player.isMoving"
       :is-sound-muted="false"
     />
+    <ThePlayerControl
+      :class="$style['player-control']"
+      :activeButtons="player.keysPressed"
+      :showInteractButton="player.showInteractButton"
+    />
   </div>
 </template>
 
@@ -39,10 +44,9 @@ const audioElement = ref<HTMLAudioElement | null>(null)
 const { map, player, getTileId } = useGameEngine(LEVEL_1)
 const tileId = computed(() => getTileId(player.position.x, player.position.y))
 
-
 watchEffect(() => {
-  if(map.isEnd) {
-    emits('end');
+  if (map.isEnd) {
+    emits('end')
   }
 })
 </script>
@@ -62,5 +66,12 @@ body {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+.player-control {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
 }
 </style>

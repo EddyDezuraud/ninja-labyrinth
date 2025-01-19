@@ -9,10 +9,12 @@ export interface Level {
 export interface PlayerData {
   direction: 'up' | 'down' | 'left' | 'right'
   isMoving: boolean
+  keysPressed: Set<string>
   position: {
     x: number
     y: number
   }
+  showInteractButton: boolean
 }
 
 export interface MapData {
@@ -28,16 +30,16 @@ export function useGameEngine(level: Level) {
     height: 4000,
     grid: level.grid,
     isExitOpen: false,
-    isEnd: false
+    isEnd: false,
   })
 
   const player = reactive<PlayerData>({
     direction: 'down',
     isMoving: false,
+    keysPressed: new Set<string>(),
     position: initPlayerPosition(),
+    showInteractButton: false,
   })
-
-  const keysPressed = new Set<string>()
 
   function initPlayerPosition() {
     const position = localStorage.getItem('playerPosition')
@@ -75,15 +77,22 @@ export function useGameEngine(level: Level) {
   const movePlayer = (dx: number, dy: number) => {
     const newX = player.position.x + dx
     const newY = player.position.y + dy
-    const tileId = getTileId(newX, newY)
+    const targetTileId = getTileId(newX, newY)
+    const currentTileId = getTileId(player.position.x, player.position.y)
 
-    if (tileId === EXIT_PORTAL && map.isExitOpen) {
+    if (INTERACTIVE_TILES.includes(currentTileId)) {
+      player.showInteractButton = true
+    } else {
+      player.showInteractButton = false
+    }
+
+    if (targetTileId === EXIT_PORTAL && map.isExitOpen) {
       // TODO switch level management
       player.isMoving = false
       map.isEnd = true
-      keysPressed.clear()
+      player.keysPressed.clear()
       window.removeEventListener('keydown', keydownHandler)
-    } else if (!BLOCKED_TILE_IDS.includes(tileId)) {
+    } else if (!BLOCKED_TILE_IDS.includes(targetTileId)) {
       player.position.x = newX
       player.position.y = newY
     }
@@ -92,22 +101,22 @@ export function useGameEngine(level: Level) {
   }
 
   const updateMovement = () => {
-    if (keysPressed.has('z')) {
+    if (player.keysPressed.has('z')) {
       player.direction = 'up'
       movePlayer(0, -25)
     }
 
-    if (keysPressed.has('q')) {
+    if (player.keysPressed.has('q')) {
       player.direction = 'left'
       movePlayer(-25, 0)
     }
 
-    if (keysPressed.has('s')) {
+    if (player.keysPressed.has('s')) {
       player.direction = 'down'
       movePlayer(0, 25)
     }
 
-    if (keysPressed.has('d')) {
+    if (player.keysPressed.has('d')) {
       player.direction = 'right'
       movePlayer(25, 0)
     }
@@ -124,7 +133,7 @@ export function useGameEngine(level: Level) {
   const keydownHandler = (event: KeyboardEvent) => {
     if (['z', 'q', 's', 'd'].includes(event.key)) {
       player.isMoving = true
-      keysPressed.add(event.key)
+      player.keysPressed.add(event.key)
     }
 
     if (event.key === 'e') {
@@ -134,9 +143,9 @@ export function useGameEngine(level: Level) {
 
   const keyupHandler = (event: KeyboardEvent) => {
     if (['z', 'q', 's', 'd'].includes(event.key)) {
-      keysPressed.delete(event.key)
+      player.keysPressed.delete(event.key)
 
-      if (keysPressed.size === 0) {
+      if (player.keysPressed.size === 0) {
         player.isMoving = false
       }
     }

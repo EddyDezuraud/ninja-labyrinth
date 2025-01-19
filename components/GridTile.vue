@@ -4,8 +4,7 @@
       $style.tile,
       $style[`tile--${id}`],
       {
-        [$style['tile--exit-open']]:
-          isExitOpen && INTERACTIVE_TILES.includes(id),
+        [$style['tile--exit-open']]: isExitOpen && DYNAMIC_TILES.includes(id),
       },
     ]"
   ></div>

@@ -12,7 +12,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    activeButtons: ['z'],
+    activeButtons: new Set('z'),
     showInteractButton: false,
   },
 }
