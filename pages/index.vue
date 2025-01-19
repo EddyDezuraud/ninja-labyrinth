@@ -1,8 +1,14 @@
 <template>
-  <div :class="$style.wrapper">
-    <ViewGame v-if="view === 'game'" :level @end="onEndGame()" />
-    <ViewEnd v-else-if="view === 'end'" :level :timer @next-level="onNextLevel()" />
-    <ViewStart v-else @start-game="onStartGame()" />
+  <div :class="[$style.wrapper, {[$style.inGame] : view === 'game'}]">
+		<div :class="$style.views">
+			<ViewGame v-if="view === 'game'" :level @end="onEndGame()" />
+			<ViewEnd v-else-if="view === 'end'" :level :timer @next-level="onNextLevel()" />
+			<ViewStart v-else @start-game="onStartGame()" />
+		</div>
+		<div :class="$style.ui">
+			<UiTag :class="$style.levelTag">Level {{ level }}</UiTag>
+			<UiTag :class="$style.timerTag" size="small">Timer: {{ timer }}s</UiTag>
+		</div>
   </div>
 </template>
 
@@ -50,5 +56,41 @@ const onEndGame = (): void => {
 .wrapper {
   display: block;
 	font-family: Fredoka, sans-serif;
+}
+
+.ui {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	pointer-events: none;
+	z-index: 9999;
+}
+
+.levelTag {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	opacity: 0;
+	transition: opacity 0.7s;
+}
+
+.timerTag {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+}
+
+.timerTag,
+.levelTag {
+	opacity: 0;
+}
+
+.inGame {
+	.timerTag,
+	.levelTag {
+		opacity: 1;
+	}
 }
 </style>
