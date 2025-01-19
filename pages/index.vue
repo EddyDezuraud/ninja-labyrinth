@@ -26,6 +26,10 @@
 </template>
 
 <script setup lang="ts">
+const emit = defineEmits<{
+  (e: 'start-music'): void
+}>()
+
 const isMoving = ref<boolean>(true)
 const movingDirection = ref<'up' | 'down' | 'left' | 'right'>('down')
 const isLeaving = ref<boolean>(false)
@@ -47,6 +51,8 @@ const start = async () => {
 }
 
 const onClickButton = () => {
+  emit('start-music')
+
   if (timer) {
     clearTimeout(timer)
   }

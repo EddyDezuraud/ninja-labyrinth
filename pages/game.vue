@@ -6,17 +6,6 @@
       preload="auto"
       loop
     />
-    <button
-      @click="startMusic"
-      style="
-        position: absolute;
-        right: 0;
-        background-color: white;
-        z-index: 100;
-      "
-    >
-      Démarrer la musique
-    </button>
 
     <div style="position: absolute; top: 0px; z-index: 100; background: white">
       playerPosition: {{ player.position }} playerDirection:
@@ -45,10 +34,6 @@
 const audioElement = ref<HTMLAudioElement | null>(null)
 const { map, player, getTileId } = useGameEngine(LEVEL_1)
 const tileId = computed(() => getTileId(player.position.x, player.position.y))
-
-const startMusic = () => {
-  audioElement.value?.play()
-}
 </script>
 
 <style module lang="postcss">
