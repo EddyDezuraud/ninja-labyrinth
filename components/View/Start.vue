@@ -16,13 +16,30 @@
           is-sound-muted
         />
       </div>
-      <UiButton :class="$style.button" @click="onClickButton">Start</UiButton>
-			<UiTag v-if="highestScore && highestScore > 0" :class="$style.highestScore" size="medium">Highest score: {{ readableTimer }}</UiTag>
+      <div :class="$style.buttons">
+        <UiButton :class="$style.button" @click="onClickButton">
+          {{ hasGameSave ? 'Continue' : 'Start' }}
+        </UiButton>
+        <UiButton
+          v-if="hasGameSave"
+          :class="$style.button"
+          @click="onResetButton"
+        >
+          Restart
+        </UiButton>
+      </div>
+
+      <UiTag
+        v-if="highestScore && highestScore > 0"
+        :class="$style.highestScore"
+        size="medium"
+        >Highest score: {{ readableTimer }}</UiTag
+      >
     </div>
 
     <div :class="$style.scenery">
       <img :class="$style.darkTree" src="/images/dark-tree.svg" alt="" />
-			<span :class="$style.copyrights">Developped by CSS NINJAS</span>
+      <span :class="$style.copyrights">Developped by CSS NINJAS</span>
     </div>
   </div>
 </template>
@@ -32,6 +49,8 @@ const emits = defineEmits<{
   (e: 'start-game'): void
 }>()
 
+const { hasGameSave, resetGameSave } = useGameSave()
+
 const isMoving = ref(true)
 const movingDirection = ref<'up' | 'down' | 'left' | 'right'>('down')
 const isLeaving = ref(false)
@@ -40,21 +59,21 @@ const isInitialized = ref(false)
 const highestScore = ref<number>(0)
 
 const getHighestScore = (): void => {
-	const storedScore = localStorage.getItem('highestScore')
-	if (storedScore) {
-		highestScore.value = parseInt(storedScore, 10)
-	}
+  const storedScore = localStorage.getItem('highestScore')
+  if (storedScore) {
+    highestScore.value = parseInt(storedScore, 10)
+  }
 }
 
 const readableTimer = computed<string>(() => {
-	// return xx minutes xx seconds of all completed levels
-	const minutes = Math.floor(highestScore.value / 60);
-	const seconds = highestScore.value % 60;
-	return `${minutes}m ${seconds}s`;
+  // return xx minutes xx seconds of all completed levels
+  const minutes = Math.floor(highestScore.value / 60)
+  const seconds = highestScore.value % 60
+  return `${minutes}m ${seconds}s`
 })
 
 onMounted(() => {
-	getHighestScore();
+  getHighestScore()
 
   timer = setTimeout(() => {
     isMoving.value = false
@@ -67,6 +86,11 @@ onMounted(() => {
 
 const start = async () => {
   emits('start-game')
+}
+
+const onResetButton = () => {
+  resetGameSave()
+  onClickButton()
 }
 
 const onClickButton = () => {
@@ -171,26 +195,26 @@ const onClickButton = () => {
 }
 
 .highestScore {
-	position: absolute;
-	top: 20px;
-	left: 20px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
 }
 
 .copyrights {
-	position: absolute;
-	bottom: 20px;
-	right: 20px;
-	font-size: 10px;
-	opacity: 0.5;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 10px;
+  opacity: 0.5;
 }
 
 @media (max-height: 550px) {
-	.title {
-		font-size: 48px;
-	}
+  .title {
+    font-size: 48px;
+  }
 
-	.inner {
-		gap: 20px;
-	}
+  .inner {
+    gap: 20px;
+  }
 }
 </style>

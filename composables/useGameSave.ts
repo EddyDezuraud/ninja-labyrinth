@@ -1,22 +1,32 @@
-export function useGameSave(map: MapData, player: PlayerData) {
-  function getPlayerPosition() {
-    const position = localStorage.getItem('playerPosition')
+export function useGameSave() {
+  const hasGameSave = localStorage.getItem('playerLevel') !== null
 
-    if (position) {
-      const parsed = JSON.parse(position)
+  function getPlayerLevel() {
+    const level = localStorage.getItem('playerLevel')
 
-      return {
-        x: Number(parsed.x),
-        y: Number(parsed.y),
+    if (level) {
+      const parsedLevel = Number(level)
+
+      if (!isNaN(parsedLevel) && parsedLevel) {
+        return parsedLevel
+      } else {
+        return null
       }
     }
-
-    return null
   }
 
-  const savePlayerPosition = () => {
-    localStorage.setItem('playerPosition', JSON.stringify(player.position))
+  const savePlayerLevel = (level: number) => {
+    localStorage.setItem('playerLevel', level.toString())
   }
 
-  return {}
+  const resetGameSave = () => {
+    localStorage.removeItem('playerLevel')
+  }
+
+  return {
+    hasGameSave,
+    getPlayerLevel,
+    resetGameSave,
+    savePlayerLevel,
+  }
 }

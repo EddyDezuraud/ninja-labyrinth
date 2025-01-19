@@ -40,30 +40,12 @@ export function useGameEngine(level: Level) {
     direction: 'down',
     isMoving: false,
     keysPressed: new Set<string>(),
-    position: initPlayerPosition(),
-    showInteractButton: false,
-  })
-
-  function initPlayerPosition() {
-    const position = localStorage.getItem('playerPosition')
-
-    if (position) {
-      const parsed = JSON.parse(position)
-      return {
-        x: Number(parsed.x),
-        y: Number(parsed.y),
-      }
-    }
-
-    return {
+    position: {
       x: level.playerStartAt.x,
       y: level.playerStartAt.y,
-    }
-  }
-
-  const savePlayerPosition = () => {
-    localStorage.setItem('playerPosition', JSON.stringify(player.position))
-  }
+    },
+    showInteractButton: false,
+  })
 
   const getTileId = (x: number, y: number) => {
     const mapWidthInTiles = 40
@@ -99,8 +81,6 @@ export function useGameEngine(level: Level) {
       player.position.x = newX
       player.position.y = newY
     }
-
-    savePlayerPosition()
   }
 
   let elapsedTime = 0

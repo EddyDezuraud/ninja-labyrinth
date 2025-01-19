@@ -1,38 +1,49 @@
 <template>
-  <div :class="[$style.wrapper, {[$style.inGame] : view === 'game'}]">
-		<div :class="$style.views">
-			<ViewGame v-if="view === 'game'" :level @end="onEndGame()" />
-			<ViewNextLevel v-else-if="view === 'next'" :level :timer @next-level="onNextLevel()" />
-			<ViewEndGame v-else-if="view === 'end'" :level :timesHistory @back-home="onBackHome()" />
-			<ViewStart v-else @start-game="onStartGame()" />
-		</div>
-		<div :class="$style.ui">
-			<UiTag :class="$style.levelTag">Level {{ level }}</UiTag>
-			<UiTag :class="$style.timerTag" size="small">Timer: {{ timer }}s</UiTag>
-		</div>
-		<audio
-			ref="audioElement"
-			src="/sounds/ambiant-music.mp3"
-			preload="auto"
-			loop
-		/>
+  <div :class="[$style.wrapper, { [$style.inGame]: view === 'game' }]">
+    <div :class="$style.views">
+      <ViewGame v-if="view === 'game'" :level @end="onEndGame()" />
+      <ViewNextLevel
+        v-else-if="view === 'next'"
+        :level
+        :timer
+        @next-level="onNextLevel()"
+      />
+      <ViewEndGame
+        v-else-if="view === 'end'"
+        :level
+        :timesHistory
+        @back-home="onBackHome()"
+      />
+      <ViewStart v-else @start-game="onStartGame()" />
+    </div>
+    <div :class="$style.ui">
+      <UiTag :class="$style.levelTag">Level {{ level }}</UiTag>
+      <UiTag :class="$style.timerTag" size="small">Timer: {{ timer }}s</UiTag>
+    </div>
+    <audio
+      ref="audioElement"
+      src="/sounds/ambiant-music.mp3"
+      preload="auto"
+      loop
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+const { getPlayerLevel, savePlayerLevel, resetGameSave } = useGameSave()
 
-const view = ref<'start' | 'game' | 'next' | 'end'>('start');
-const level = ref<number>(1);
-const timer = ref<number>(0);
-const maxLevel = 2;
-let timerInterval = null as any;
-const timesHistory = ref<number[]>([]);
+const view = ref<'start' | 'game' | 'next' | 'end'>('start')
+const level = ref(1)
+const timer = ref(0)
+const maxLevel = 2
+let timerInterval = null as any
+const timesHistory = ref<number[]>([])
 const audioElement = ref<HTMLAudioElement | null>(null)
 
 const startAudio = (): void => {
-	if(audioElement.value) {
-		audioElement.value.play();
-	}
+  if (audioElement.value) {
+    audioElement.value.play()
+  }
 }
 
 const startTimer = (): void => {
@@ -58,13 +69,15 @@ const resetHistory = (): void => {
 }
 
 const onStartGame = (): void => {
-	startAudio()
+  level.value = getPlayerLevel() ?? 1
+  startAudio()
   view.value = 'game'
   startTimer()
 }
 
 const onNextLevel = (): void => {
   level.value += 1
+  savePlayerLevel(level.value)
   view.value = 'game'
   resetTimer()
   startTimer()
@@ -79,6 +92,8 @@ const onEndGame = (): void => {
   } else {
     view.value = 'next'
   }
+
+  resetGameSave()
 }
 
 const onBackHome = (): void => {
