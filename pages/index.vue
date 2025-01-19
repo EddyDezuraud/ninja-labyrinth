@@ -2,8 +2,8 @@
   <div :class="[$style.wrapper, {[$style.inGame] : view === 'game'}]">
 		<div :class="$style.views">
 			<ViewGame v-if="view === 'game'" :level @end="onEndGame()" />
-			<ViewNext v-else-if="view === 'next'" :level :timesHistory @next-level="onNextLevel()" />
-			<ViewEnd v-else-if="view === 'end'" :level :timer @back-home="onBackHome()" />
+			<ViewNextLevel v-else-if="view === 'next'" :level :timesHistory @next-level="onNextLevel()" />
+			<ViewEndGame v-else-if="view === 'end'" :level :timer @back-home="onBackHome()" />
 			<ViewStart v-else @start-game="onStartGame()" />
 		</div>
 		<div :class="$style.ui">

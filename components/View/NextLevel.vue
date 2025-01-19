@@ -3,7 +3,7 @@
 
       <div :class="$style.inner">
           <div :class="$style.content">
-              <h1 :class="$style.title">Well done !</h1>
+              <h1 :class="$style.title">Well done!</h1>
               <p :class="$style.p">
                   You have completed this level in <strong>{{ readableTimer }}</strong>!
               </p>

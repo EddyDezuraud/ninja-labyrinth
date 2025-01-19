@@ -3,12 +3,13 @@
 
       <div :class="$style.inner">
           <div :class="$style.content">
-              <h1 :class="$style.title">Well done !</h1>
+              <h1 :class="$style.title">Victory Achieved!</h1>
               <p :class="$style.p">
-                  You have completed this level in <strong>{{ readableTimer }}</strong>!
+								You’ve conquered the game in <strong>{{ readableTimer }}! </strong><br/>
+								Thanks for playing and see you on your next adventure!
               </p>
           </div>
-          <UiButton :class="$style.button" @click="onClickButton" >Next level ></UiButton>
+          <UiButton :class="$style.button" @click="onClickButton" >Go Home</UiButton>
       </div>
 
       <div :class="$style.scenery">
@@ -27,7 +28,7 @@ interface Props {
 const { timer } = defineProps<Props>();
 
 const emits = defineEmits<{
-	(e: 'next-level'): void
+	(e: 'back-home'): void
 }>()
 
 const readableTimer = computed<number>(() => {
@@ -36,7 +37,7 @@ const readableTimer = computed<number>(() => {
 })
 
 const onClickButton = () => {
-	emits('next-level');
+	emits('back-home');
 }
 
 </script>
