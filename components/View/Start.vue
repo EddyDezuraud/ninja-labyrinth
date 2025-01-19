@@ -17,10 +17,12 @@
         />
       </div>
       <UiButton :class="$style.button" @click="onClickButton">Start</UiButton>
+			<UiTag v-if="highestScore && highestScore > 0" :class="$style.highestScore" size="medium">Highest score: {{ readableTimer }}</UiTag>
     </div>
 
     <div :class="$style.scenery">
       <img :class="$style.darkTree" src="/images/dark-tree.svg" alt="" />
+			<span :class="$style.copyrights">Developped by CSS NINJAS</span>
     </div>
   </div>
 </template>
@@ -172,6 +174,14 @@ const onClickButton = () => {
 	position: absolute;
 	top: 20px;
 	left: 20px;
+}
+
+.copyrights {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	font-size: 10px;
+	opacity: 0.5;
 }
 
 @media (max-height: 550px) {

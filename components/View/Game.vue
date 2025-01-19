@@ -36,12 +36,24 @@
 </template>
 
 <script setup lang="ts">
+interface Props {
+	level: number
+}
+
+const { level } = defineProps<Props>()
+
 const emits = defineEmits<{
   (e: 'end'): void
 }>()
 
 const exitAudioElement = ref<HTMLAudioElement | null>(null)
-const { map, player, getTileId } = useGameEngine(LEVEL_1)
+
+const levelFiles = [
+	LEVEL_1,
+	LEVEL_2
+]
+
+const { map, player, getTileId } = useGameEngine(levelFiles[level - 1])
 // const tileId = computed(() => getTileId(player.position.x, player.position.y))
 
 watchEffect(() => {

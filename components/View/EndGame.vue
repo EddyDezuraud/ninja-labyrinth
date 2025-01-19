@@ -35,7 +35,7 @@ const setHighestScore = () => {
 	const score = timesHistory.reduce((acc, time) => acc + time, 0);
 	if (storedScore) {
 		// additionner l'ensemble des temps
-		if (score > parseInt(storedScore, 10)) {
+		if (score < parseInt(storedScore, 10)) {
 			localStorage.setItem('highestScore', score.toString());
 		}
 	} else {

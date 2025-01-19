@@ -14,8 +14,8 @@
       v-show="showInteractButton"
       :class="[$style['interaction-btn'], $style['interaction-btn--blink']]"
     >
-      <span>Appuyer sur</span><UiKeyboardKey is-active>E</UiKeyboardKey>
-      <span>pour intéragir</span>
+      <span>Press</span><UiKeyboardKey is-active>E</UiKeyboardKey>
+      <span>to interact</span>
     </div>
   </div>
 </template>

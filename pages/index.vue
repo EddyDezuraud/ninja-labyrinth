@@ -24,7 +24,7 @@
 const view = ref<'start' | 'game' | 'next' | 'end'>('start');
 const level = ref<number>(1);
 const timer = ref<number>(0);
-const maxLevel = 3;
+const maxLevel = 2;
 let timerInterval = null as any;
 const timesHistory = ref<number[]>([]);
 const audioElement = ref<HTMLAudioElement | null>(null)
