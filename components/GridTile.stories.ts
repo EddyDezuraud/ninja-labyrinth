@@ -14,5 +14,6 @@ export const Default: Story = {
   args: {
     id: 'D0',
     isExitOpen: false,
+    areTrapsActive: false,
   },
 }

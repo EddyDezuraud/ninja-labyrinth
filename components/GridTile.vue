@@ -4,7 +4,9 @@
       $style.tile,
       $style[`tile--${id}`],
       {
-        [$style['tile--exit-open']]: isExitOpen && DYNAMIC_TILES.includes(id),
+        [$style['tile--exit-open']]:
+          isExitOpen && EXIT_DYNAMIC_TILES.includes(id),
+        [$style['tile--trap-active']]: isTrapActive && TRAP_TILES.includes(id),
       },
     ]"
   ></div>
@@ -14,6 +16,7 @@
 interface Props {
   id: string
   isExitOpen: boolean
+  isTrapActive: boolean
 }
 
 defineProps<Props>()
@@ -140,6 +143,14 @@ defineProps<Props>()
 
 .tile--I0 {
   background-position: 0px -500px;
+}
+
+.tile--T0 {
+  background-position: 0px -600px;
+
+  &.tile--trap-active {
+    background-position: -100px -600px;
+  }
 }
 
 @keyframes X0-active {

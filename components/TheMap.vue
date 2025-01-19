@@ -8,6 +8,7 @@
       :id="id"
       :key="`tile-${id}-${index}`"
       :is-exit-open="isExitOpen"
+      :is-trap-active="isTrapActive"
     />
   </div>
 </template>
@@ -22,6 +23,7 @@ interface Props {
     y: number
   }
   isExitOpen: boolean
+  isTrapActive: boolean
 }
 
 defineProps<Props>()

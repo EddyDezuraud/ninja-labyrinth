@@ -1,6 +1,7 @@
 export const EXIT_PORTAL = 'X0'
 export const EXIT_ACTIVATION_SWITCH = 'I0'
-export const DYNAMIC_TILES = ['X0', 'S5']
+export const EXIT_DYNAMIC_TILES = ['X0', 'S5']
+export const TRAP_TILES = ['T0']
 export const INTERACTIVE_TILES = ['I0']
 export const BLOCKED_TILE_IDS = [
   'D0',

@@ -1,9 +1,11 @@
 export interface Level {
   grid: string[]
+  hasTraps: boolean
   playerStartAt: {
     x: number
     y: number
   }
+  trapToggleDelay: number
 }
 
 export interface PlayerData {
@@ -31,6 +33,7 @@ export function useGameEngine(level: Level) {
     grid: level.grid,
     isExitOpen: false,
     isEnd: false,
+    isTrapActive: false,
   })
 
   const player = reactive<PlayerData>({
@@ -100,7 +103,11 @@ export function useGameEngine(level: Level) {
     savePlayerPosition()
   }
 
+  let elapsedTime = 0
+
   const updateMovement = () => {
+    elapsedTime += 100
+
     if (player.keysPressed.has('z')) {
       player.direction = 'up'
       movePlayer(0, -25)
@@ -119,6 +126,11 @@ export function useGameEngine(level: Level) {
     if (player.keysPressed.has('d')) {
       player.direction = 'right'
       movePlayer(25, 0)
+    }
+
+    if (!map.isEnd && level.hasTraps && elapsedTime >= level.trapToggleDelay) {
+      map.isTrapActive = !map.isTrapActive
+      elapsedTime = 0
     }
   }
 

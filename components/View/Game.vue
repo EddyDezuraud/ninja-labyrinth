@@ -19,6 +19,7 @@
       :position="player.position"
       :width="map.height"
       :is-exit-open="map.isExitOpen"
+      :is-trap-active="map.isTrapActive"
     />
     <ThePlayer
       :class="$style.player"

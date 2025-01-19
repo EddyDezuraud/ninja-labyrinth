@@ -1605,4 +1605,6 @@ export const LEVEL_2 = {
     x: 1875,
     y: 3650,
   },
+  hasTraps: false,
+  trapToggleDelay: 2000,
 }
