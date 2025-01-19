@@ -30,10 +30,20 @@
       <UiTag :class="$style.timerTag" size="small">Timer: {{ timer }}s</UiTag>
     </div>
     <audio
-      ref="audioElement"
+      ref="backgroundAudioElement"
       src="/sounds/ambiant-music.mp3"
       preload="auto"
       loop
+    />
+    <audio
+      ref="teleportingAudioElement"
+      src="/sounds/portal-transition-sound.mp3"
+      preload="auto"
+    />
+    <audio
+      ref="ripAudioElement"
+      src="/sounds/rip-sound.mp3"
+      preload="auto"
     />
   </div>
 </template>
@@ -46,11 +56,13 @@ const level = ref(1)
 const timer = ref(0)
 let timerInterval = null as any
 const timesHistory = ref<number[]>([])
-const audioElement = ref<HTMLAudioElement | null>(null)
+const backgroundAudioElement = ref<HTMLAudioElement | null>(null)
+const teleportingAudioElement = ref<HTMLAudioElement | null>(null)
+const ripAudioElement = ref<HTMLAudioElement | null>(null)
 
 const startAudio = (): void => {
-  if (audioElement.value) {
-    audioElement.value.play()
+  if (backgroundAudioElement.value) {
+    backgroundAudioElement.value.play()
   }
 }
 
@@ -77,7 +89,7 @@ const resetHistory = (): void => {
 }
 
 const onStartGame = (): void => {
-  level.value = getPlayerLevel() ?? 3
+  level.value = getPlayerLevel() ?? 1
   startAudio()
   view.value = 'game'
   startTimer()
@@ -92,6 +104,11 @@ const onNextLevel = (): void => {
 }
 
 const onEndGame = (): void => {
+  if (teleportingAudioElement.value) {
+    teleportingAudioElement.value.volume = 0.3
+    teleportingAudioElement.value?.play()
+  }
+
   saveTime()
   endTimer()
   resetGameSave()
@@ -104,6 +121,10 @@ const onEndGame = (): void => {
 }
 
 const onLoseGame = (): void => {
+  if (ripAudioElement.value) {
+    ripAudioElement.value?.play()
+  }
+
   endTimer()
   resetGameSave()
 
