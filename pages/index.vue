@@ -1,70 +1,148 @@
 <template>
-  <div :class="$style.wrapper">
-    <audio
-      ref="audioElement"
-      src="/sounds/ambiant-music.mp3"
-      preload="auto"
-      loop
-    />
-    <button
-      @click="startMusic"
-      style="
-        position: absolute;
-        right: 0;
-        background-color: white;
-        z-index: 100;
-      "
-    >
-      Démarrer la musique
-    </button>
+    <div :class="[$style.wrapper, {[$style.leaving] : isLeaving}, {[$style.initialized] : isInitialized}]">
 
-    <div style="position: absolute; top: 0px; z-index: 100; background: white">
-      playerPosition: {{ player.position }} playerDirection:
-      {{ player.direction }} isMoving: {{ player.isMoving }} TileId:
-      {{ tileId }} isExitOpen:
-      {{ map.isExitOpen }}
+        <div :class="$style.inner">
+            <h1 :class="$style.title">Huescape</h1>
+            <div :class="$style.characterWrapper">
+                <ThePlayer :class="$style.character" :isMoving :direction="movingDirection" is-sound-muted />
+            </div>
+            <UiButton :class="$style.button" @click="onClickButton" >Start</UiButton>
+        </div>
+
+        <div :class="$style.scenery">
+            <img :class="$style.darkTree" src="/images/dark-tree.svg" alt="">
+        </div>
+
     </div>
-    <TheTorchAura />
-    <TheMap
-      :grid="map.grid"
-      :height="map.height"
-      :position="player.position"
-      :width="map.height"
-      :is-exit-open="map.isExitOpen"
-    />
-    <ThePlayer
-      :class="$style.player"
-      :direction="player.direction"
-      :is-moving="player.isMoving"
-      :is-sound-muted="false"
-    />
-  </div>
 </template>
 
 <script setup lang="ts">
-const audioElement = ref<HTMLAudioElement | null>(null)
-const { map, player, getTileId } = useGameEngine(LEVEL_1)
-const tileId = computed(() => getTileId(player.position.x, player.position.y))
+import { ref, onMounted } from 'vue';
 
-const startMusic = () => {
-  audioElement.value?.play()
+const isMoving = ref<boolean>(true);
+const movingDirection = ref<string>('down');
+const isLeaving = ref<boolean>(false);
+let timer = null;
+const isInitialized = ref<boolean>(false);
+
+onMounted(() => {
+    timer = setTimeout(() => {
+        isMoving.value = false;
+    }, 11500); // 10 secondes
+
+
+    setTimeout(() => {
+        isInitialized.value = true;
+    }, 500); // 10 secondes
+
+});
+
+const start = async() => {
+   await navigateTo('/game');
+};
+
+const onClickButton = () => {
+    if(timer) {
+        clearTimeout(timer);
+    }
+    isLeaving.value = true;
+    isMoving.value = true;
+    movingDirection.value = 'up';
+
+    timer = setTimeout(() => {
+        isMoving.value = false;
+        movingDirection.value = 'down';
+
+        setTimeout(() => {
+            start();
+        }, 300); // 10 secondes
+    }, 2000); // 2 secondes
 }
 </script>
 
+
 <style module lang="postcss">
-body {
-  background-color: var(--edge);
-}
-
 .wrapper {
-  height: 100vh;
-  overflow: hidden;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--color-900);
+    color: white;
+    width: 100vw;
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, var(--color-200) 0%, black 60%);
+        background-repeat: no-repeat;
+        background-position: center center;
+        opacity: 0.04;
+    }
+} 
+
+.inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    position: relative;
+    z-index: 4;
+} 
+
+.title {
+    font-size: 78px; 
+    /* Or font-size: 6vw; */
+    text-align: center;
+    font-family: 'Bahiana', cursive;
 }
 
-.player {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+.darkTree {
+    position: absolute;
+    bottom: 0;
+    left: calc(50% - 400px);
+    transform: translateX(-50%);
+    z-index: 3;
 }
+
+.character {
+    position: relative;
+    top: -15px;
+    transform: scale(1);
+    transition: transform 10s;
+}
+
+
+.initialized {
+
+    .wrapper::before {
+        opacity: 0.13;
+        transition: opacity 4s;
+    }
+
+    .character {
+        transition: transform 10s;
+        transform: scale(1.6);
+    }
+}
+
+.leaving {
+    .character {
+        transform: scale(1);
+        transition: transform 2s;
+    }
+
+    .scenery,
+    .button,
+    .title {
+        opacity: 0;
+        transition: opacity 0.5s;
+    }
+}
+
 </style>
