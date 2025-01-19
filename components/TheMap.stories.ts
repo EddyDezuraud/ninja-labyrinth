@@ -19,5 +19,6 @@ export const Default: Story = {
       y: 0,
     },
     width: 1000,
+    isExitOpen: false,
   },
 }

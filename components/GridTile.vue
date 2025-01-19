@@ -1,10 +1,20 @@
 <template>
-  <div :class="[$style.tile, $style[`tile--${id}`]]"></div>
+  <div
+    :class="[
+      $style.tile,
+      $style[`tile--${id}`],
+      {
+        [$style['tile--exit-open']]:
+          isExitOpen && INTERACTIVE_TILES.includes(id),
+      },
+    ]"
+  ></div>
 </template>
 
 <script setup lang="ts">
 interface Props {
   id: string
+  isExitOpen: boolean
 }
 
 defineProps<Props>()
@@ -110,10 +120,65 @@ defineProps<Props>()
 }
 
 .tile--X0 {
-  background-position: 0px -300px;
+  background-position: -600px -300px;
+
+  &.tile--exit-open {
+    animation: X0-active 0.6s steps(1) infinite;
+  }
 }
 
 .tile--S0 {
   background-position: 0px -400px;
+}
+
+.tile--S5 {
+  background-position: -500px -400px;
+
+  &.tile--exit-open {
+    animation: S5-active 0.2s steps(1) infinite;
+  }
+}
+
+.tile--I0 {
+  background-position: 0px -500px;
+}
+
+@keyframes X0-active {
+  0% {
+    background-position: 0px -300px;
+  }
+  10% {
+    background-position: -100px -300px;
+  }
+  25% {
+    background-position: -200px -300px;
+  }
+  45% {
+    background-position: -300px -300px;
+  }
+  65% {
+    background-position: -400px -300px;
+  }
+  85% {
+    background-position: -500px -300px;
+  }
+  100% {
+    background-position: 0px -300px;
+  }
+}
+
+@keyframes S5-active {
+  0% {
+    background-position: -600px -400px;
+  }
+  35% {
+    background-position: -700px -400px;
+  }
+  65% {
+    background-position: -800px -400px;
+  }
+  100% {
+    background-position: -600px -400px;
+  }
 }
 </style>

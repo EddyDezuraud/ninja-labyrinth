@@ -9,11 +9,12 @@
   --color-750: #0B1823;
   --color-800: #09141D;
   --color-850: #071118;
-  --color-900: rgb(5, 11, 16);
+  --color-900: #050b10;
 
 
   --torch-aura: rgb(5, 11, 16, 0.98);
   --ground: var(--color-800);
+  --edge: #050A11;
   --soild: var(--color-750);
   --shadow: var(--color-850);
 }

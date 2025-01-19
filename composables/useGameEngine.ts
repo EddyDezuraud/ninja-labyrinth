@@ -1,4 +1,12 @@
-interface PlayerData {
+export interface Level {
+  grid: string[]
+  playerStartAt: {
+    x: number
+    y: number
+  }
+}
+
+export interface PlayerData {
   direction: 'up' | 'down' | 'left' | 'right'
   isMoving: boolean
   position: {
@@ -7,10 +15,18 @@ interface PlayerData {
   }
 }
 
-export function useMap(grid: string[]) {
+export interface MapData {
+  width: number
+  height: number
+  isExitOpen: boolean
+}
+
+export function useGameEngine(level: Level) {
   const map = reactive({
     width: 4000,
     height: 4000,
+    grid: level.grid,
+    isExitOpen: false,
   })
 
   const player = reactive<PlayerData>({
@@ -33,8 +49,8 @@ export function useMap(grid: string[]) {
     }
 
     return {
-      x: 1875,
-      y: 3650,
+      x: level.playerStartAt.x,
+      y: level.playerStartAt.y,
     }
   }
 
@@ -51,7 +67,7 @@ export function useMap(grid: string[]) {
 
     const tileId = tileY * mapWidthInTiles + tileX
 
-    return grid?.[tileId] ?? null
+    return level.grid?.[tileId] ?? null
   }
 
   const movePlayer = (dx: number, dy: number) => {
@@ -59,7 +75,7 @@ export function useMap(grid: string[]) {
     const newY = player.position.y + dy
     const tileId = getTileId(newX, newY)
 
-    if (tileId === EXIT_PORTAL) {
+    if (tileId === EXIT_PORTAL && map.isExitOpen) {
       // TODO switch level management
       player.isMoving = false
       keysPressed.clear()
@@ -77,17 +93,28 @@ export function useMap(grid: string[]) {
       player.direction = 'up'
       movePlayer(0, -25)
     }
+
     if (keysPressed.has('q')) {
       player.direction = 'left'
       movePlayer(-25, 0)
     }
+
     if (keysPressed.has('s')) {
       player.direction = 'down'
       movePlayer(0, 25)
     }
+
     if (keysPressed.has('d')) {
       player.direction = 'right'
       movePlayer(25, 0)
+    }
+  }
+
+  const checkInteraction = () => {
+    const tileId = getTileId(player.position.x, player.position.y)
+
+    if (tileId === EXIT_ACTIVATION_SWITCH && !map.isExitOpen) {
+      map.isExitOpen = true
     }
   }
 
@@ -95,6 +122,10 @@ export function useMap(grid: string[]) {
     if (['z', 'q', 's', 'd'].includes(event.key)) {
       player.isMoving = true
       keysPressed.add(event.key)
+    }
+
+    if (event.key === 'e') {
+      checkInteraction()
     }
   }
 

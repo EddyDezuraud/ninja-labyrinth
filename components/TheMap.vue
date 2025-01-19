@@ -7,19 +7,21 @@
       v-for="(id, index) in grid"
       :id="id"
       :key="`tile-${id}-${index}`"
+      :is-exit-open="isExitOpen"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 interface Props {
-  grid: string[]
+  grid: Readonly<string[]>
   width: number
   height: number
   position: {
     x: number
     y: number
   }
+  isExitOpen: boolean
 }
 
 defineProps<Props>()

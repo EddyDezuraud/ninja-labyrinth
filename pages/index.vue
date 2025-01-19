@@ -21,14 +21,16 @@
     <div style="position: absolute; top: 0px; z-index: 100; background: white">
       playerPosition: {{ player.position }} playerDirection:
       {{ player.direction }} isMoving: {{ player.isMoving }} TileId:
-      {{ tileId }}
+      {{ tileId }} isExitOpen:
+      {{ map.isExitOpen }}
     </div>
     <TheTorchAura />
     <TheMap
-      :grid="level1"
+      :grid="map.grid"
       :height="map.height"
       :position="player.position"
       :width="map.height"
+      :is-exit-open="map.isExitOpen"
     />
     <ThePlayer
       :class="$style.player"
@@ -40,10 +42,8 @@
 </template>
 
 <script setup lang="ts">
-import level1 from '~/assets/levels/level1.json'
-
 const audioElement = ref<HTMLAudioElement | null>(null)
-const { map, player, getTileId } = useMap(level1)
+const { map, player, getTileId } = useGameEngine(LEVEL_1)
 const tileId = computed(() => getTileId(player.position.x, player.position.y))
 
 const startMusic = () => {
@@ -53,7 +53,7 @@ const startMusic = () => {
 
 <style module lang="postcss">
 body {
-  background-color: var(--ground);
+  background-color: var(--edge);
 }
 
 .wrapper {

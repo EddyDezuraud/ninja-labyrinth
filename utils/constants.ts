@@ -1,6 +1,10 @@
+export const EXIT_PORTAL = 'X0'
+export const EXIT_ACTIVATION_SWITCH = 'I0'
+export const INTERACTIVE_TILES = ['X0', 'S5']
 export const BLOCKED_TILE_IDS = [
   'D0',
   'S0',
+  'S5',
   'S1',
   'W0',
   'W1',
@@ -16,5 +20,3 @@ export const BLOCKED_TILE_IDS = [
   'W11',
   'W12',
 ]
-
-export const EXIT_PORTAL = 'X0'
