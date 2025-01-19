@@ -19,6 +19,7 @@ export interface MapData {
   width: number
   height: number
   isExitOpen: boolean
+  isEnd: boolean
 }
 
 export function useGameEngine(level: Level) {
@@ -27,6 +28,7 @@ export function useGameEngine(level: Level) {
     height: 4000,
     grid: level.grid,
     isExitOpen: false,
+    isEnd: false
   })
 
   const player = reactive<PlayerData>({
@@ -78,6 +80,7 @@ export function useGameEngine(level: Level) {
     if (tileId === EXIT_PORTAL && map.isExitOpen) {
       // TODO switch level management
       player.isMoving = false
+      map.isEnd = true
       keysPressed.clear()
       window.removeEventListener('keydown', keydownHandler)
     } else if (!BLOCKED_TILE_IDS.includes(tileId)) {

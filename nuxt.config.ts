@@ -24,6 +24,7 @@ export default defineNuxtConfig({
     families: {
       Bahiana: true,
       Jomhuria: true,
+      Fredoka: true
     }
   }
 })
