@@ -1,18 +1,17 @@
 <template>
   <div :class="$style.wrapper">
     <audio
-      ref="audioElement"
-      src="/sounds/ambiant-music.mp3"
+      ref="exitAudioElement"
+      src="/sounds/exit-opened.mp3"
       preload="auto"
-      loop
     />
 
-    <div style="position: absolute; top: 0px; z-index: 100; background: white">
+    <!-- <div style="position: absolute; top: 0px; z-index: 100; background: white">
       playerPosition: {{ player.position }} playerDirection:
       {{ player.direction }} isMoving: {{ player.isMoving }} TileId:
       {{ tileId }} isExitOpen:
       {{ map.isExitOpen }}
-    </div>
+    </div> -->
     <TheTorchAura />
     <TheMap
       :grid="map.grid"
@@ -40,13 +39,17 @@ const emits = defineEmits<{
   (e: 'end'): void
 }>()
 
-const audioElement = ref<HTMLAudioElement | null>(null)
+const exitAudioElement = ref<HTMLAudioElement | null>(null)
 const { map, player, getTileId } = useGameEngine(LEVEL_1)
-const tileId = computed(() => getTileId(player.position.x, player.position.y))
+// const tileId = computed(() => getTileId(player.position.x, player.position.y))
 
 watchEffect(() => {
   if (map.isEnd) {
     emits('end')
+  }
+
+  if (map.isExitOpen) {
+    exitAudioElement.value?.play()
   }
 })
 </script>

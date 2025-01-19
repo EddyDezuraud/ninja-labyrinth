@@ -27,14 +27,14 @@
 
 <script setup lang="ts">
 const emits = defineEmits<{
-  (e: 'start-game') : void
+  (e: 'start-game'): void
 }>()
 
-const isMoving = ref<boolean>(true)
+const isMoving = ref(true)
 const movingDirection = ref<'up' | 'down' | 'left' | 'right'>('down')
-const isLeaving = ref<boolean>(false)
+const isLeaving = ref(false)
 let timer = null
-const isInitialized = ref<boolean>(false)
+const isInitialized = ref(false)
 
 onMounted(() => {
   timer = setTimeout(() => {

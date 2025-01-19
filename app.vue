@@ -6,7 +6,7 @@
       preload="auto"
       loop
     />
-    <NuxtPage @start-music="startMusic" />
+    <NuxtPage @start-musicd="startMusic" />
   </div>
 </template>
 
