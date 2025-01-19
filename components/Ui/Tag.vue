@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 interface Props {
-	size: 'small' | 'medium' | 'large';
+	size?: 'small' | 'medium' | 'large';
 }
 
 withDefaults(defineProps<Props>(), {
