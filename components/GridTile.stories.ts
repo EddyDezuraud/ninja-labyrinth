@@ -12,6 +12,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    id: 'd0',
+    id: 'D0',
+    isExitOpen: false,
   },
 }

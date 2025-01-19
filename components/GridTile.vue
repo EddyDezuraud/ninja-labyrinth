@@ -135,7 +135,7 @@ defineProps<Props>()
   background-position: -500px -400px;
 
   &.tile--exit-open {
-    animation: S5-active 0.2s steps(1) infinite;
+    animation: S5-active 0.3s steps(1) infinite alternate;
   }
 }
 
@@ -178,7 +178,7 @@ defineProps<Props>()
     background-position: -800px -400px;
   }
   100% {
-    background-position: -600px -400px;
+    background-position: -900px -400px;
   }
 }
 </style>
